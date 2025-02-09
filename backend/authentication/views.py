@@ -5,7 +5,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import (
     CustomTokenObtainSerializer,
     UserRegistrationSerializer,
-    ChangPasswordSerializer
+    ChangPasswordSerializer,
+    UserProfileSerializer
 )
 from .models import User
 from django.contrib.auth import update_session_auth_hash
@@ -34,3 +35,17 @@ class ChangePasswordView(generics.UpdateAPIView):
         user.save()
         update_session_auth_hash(request, user)
         return Response({"message": "Password updated successfully"})
+    
+class UserProfileView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self):
+        return self.request.user
+    
+class UserProfileUpdateView(generics.UpdateAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self):
+        return self.request.user
