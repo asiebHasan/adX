@@ -54,6 +54,7 @@ export default function Layout({ children }) {
       {/* Sidebar */}
       <aside className="h-full w-16 flex flex-col space-y-10 items-center justify-center relative bg-linear-to-t from-[#020224] to-[#474a91] bg-cover bg-no-repeat text-white">
         {/* Sidebar Content */}
+        h
         {/* Add your sidebar elements here */}
       </aside>
 
