@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .serializers import (
     CustomTokenObtainSerializer,
     UserRegistrationSerializer,
@@ -22,6 +22,9 @@ class ClientRegistrationView(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(role=User.Role.CLIENT)
+
+class TokenRefreshView(TokenRefreshView):
+    serializer_class = CustomTokenObtainSerializer
 
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangPasswordSerializer

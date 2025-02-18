@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
+    'django_celery_beat',
     'authentication',
+    'ads'
 ]
 
 AUTH_USER_MODEL = 'authentication.User'
@@ -57,11 +59,29 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=3),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
+}
+
+
+# Use Redis as the broker
+CELERY_BROKER_URL = "redis://192.168.1.5:6379/0"
+
+# Store Celery task results (Optional)
+CELERY_RESULT_BACKEND = "redis://192.168.1.5:6379/0"
+
+
+# settings.py
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True  # Fix warning
+CELERY_TIMEZONE = 'Asia/Dhaka'  # Set your timezone
+CELERY_BEAT_SCHEDULE = {
+    'deactivate-expired-ads': {
+        'task': 'ads.tasks.deactivate_expired_ads',
+        'schedule': 30.0,  # Every 30 seconds
+    },
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -105,10 +125,13 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
+        'OPTIONS': {
+            'timeout': 20,  # Increase the timeout
+            'check_same_thread': False,  # Allow database connection sharing across threads
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -153,3 +176,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+WSGI_APPLICATION = 'backend.wsgi.application'
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+import sys
+if 'win32' in sys.platform:
+    os.environ["DJANGO_USE_WIN32_SELECT"] = "1"

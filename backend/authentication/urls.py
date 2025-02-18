@@ -6,11 +6,13 @@ from .views import (
     ChangePasswordView,
     UserProfileView,
     UserProfileUpdateView,
+    TokenRefreshView
 )
 
 urlpatterns = [
     path("login/", CustomTokenObtainPairView.as_view(), name="login"),
     path("register/", ClientRegistrationView.as_view(), name="register"),
+    path('refreshToken/', TokenRefreshView.as_view(), name='token_refresh'),
     path(
         "password_reset/",
         include("django_rest_passwordreset.urls", namespace="password_reset"),
