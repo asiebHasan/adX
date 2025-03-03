@@ -28,6 +28,8 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.CLIENT)
 
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

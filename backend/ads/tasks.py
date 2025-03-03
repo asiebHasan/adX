@@ -4,7 +4,7 @@ from django.db import close_old_connections
 from django.db.models import Q
 from .models import Ad
 
-import datetime
+from datetime import datetime
 
 @shared_task
 def deactivate_expired_ads():

@@ -1,6 +1,5 @@
 import eventlet
-eventlet.monkey_patch()  
-
+eventlet.monkey_patch(all=True, socket=False) 
 
 import os
 from celery import Celery

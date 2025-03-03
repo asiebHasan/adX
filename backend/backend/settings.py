@@ -185,3 +185,26 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 import sys
 if 'win32' in sys.platform:
     os.environ["DJANGO_USE_WIN32_SELECT"] = "1"
+   
+FRONTEND_URL = "http://localhost:3000" 
+    
+import environ
+
+
+# Initialize environment variables
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+
+# Email configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # Read EMAIL_HOST_USER from .env
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # Read EMAIL_HOST_PASSWORD from .env
+EMAIL_CLIENT_ID = env('EMAIL_CLIENT_ID')  # Read EMAIL_CLIENT_ID from .env
+EMAIL_CLIENT_SECRET = env('EMAIL_CLIENT_SECRET')  # Read EMAIL_CLIENT_SECRET from .env
+EMAIL_REFRESH_TOKEN = env('EMAIL_REFRESH_TOKEN')  # Read EMAIL_REFRESH_TOKEN from .env
